@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Sueldo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Administración de Sueldo</h1>
+
+        <h3>Ahorro Total Acumulado: ${{ total_ahorro }}</h3>
+
+        {% if sueldo %}
+            <h3>Sueldo Total: ${{ sueldo[1] }}</h3>
+            <h3>Ahorro de este mes: ${{ sueldo[2] }}</h3>
+
+            <h3>Distribución Semanal</h3>
+            <table>
+                <tr>
+                    <th>Semana</th>
+                    <th>Monto Asignado</th>
+                    <th>Gasto</th>
+                    <th>Sobrante</th>
+                    <th>Registrar Gasto</th>
+                </tr>
+                {% for semana in semanas %}
+                <tr>
+                    <td>Semana {{ semana[2] }}</td>
+                    <td>${{ semana[3] }}</td>
+                    <td>${{ semana[4] }}</td>
+                    <td>${{ semana[5] }}</td>
+                    <td>
+                        <form method="POST" action="/">
+                            <input type="hidden" name="semana_id" value="{{ semana[0] }}">
+                            <input type="number" name="gasto" step="0.01" placeholder="Gasto">
+                            <button type="submit">Registrar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No hay datos de sueldo aún. Agrega un sueldo mensual.</p>
+        {% endif %}
+
+        <h3>Agregar Sueldo Mensual</h3>
+        <form method="POST" action="/">
+            <input type="number" name="total" step="0.01" placeholder="Total del Sueldo">
+            <button type="submit">Agregar Sueldo</button>
+        </form>
+
+        <!-- Botón para borrar todos los datos -->
+        <h3>Eliminar Todos los Datos</h3>
+        <form method="POST" action="{{ url_for('borrar_datos') }}">
+            <button type="submit">Borrar Datos</button>
+        </form>
+    </div>
+</body>
+</html>
+
